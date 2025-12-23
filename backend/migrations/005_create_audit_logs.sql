@@ -1,17 +1,11 @@
 CREATE TABLE IF NOT EXISTS audit_logs (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
-    action VARCHAR(100) NOT NULL,
-    entity_type VARCHAR(50),
-    entity_id UUID,
-    ip_address VARCHAR(45),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  action VARCHAR(100) NOT NULL,
+  entity_type VARCHAR(50),
+  entity_id UUID,
+  ip_address VARCHAR(45),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
-CREATE INDEX IF NOT EXISTS idx_audit_logs_tenant ON audit_logs(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_audit_logs_created ON audit_logs(created_at);
-
-DROP INDEX IF EXISTS idx_audit_logs_created;
-DROP INDEX IF EXISTS idx_audit_logs_tenant;
-DROP TABLE IF EXISTS audit_logs;
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_audit_logs_tenant ON audit_logs(tenant_id);
