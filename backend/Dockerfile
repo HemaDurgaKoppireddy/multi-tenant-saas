@@ -1,15 +1,14 @@
-FROM node:20-alpine
+FROM node:18
 
 WORKDIR /app
 
-# Copy EVERY SINGLE FILE - no selective COPY
+COPY package*.json ./
+
+RUN npm install
+
 COPY . .
 
-# Install deps
-RUN npm ci --only=production
-
-# Make executable
-RUN chmod +x entrypoint.sh
-
 EXPOSE 5000
-ENTRYPOINT ["/app/entrypoint.sh"]
+
+CMD ["sh", "-c", "npx knex migrate:latest && npx knex seed:run && node src/app.js"]
+
