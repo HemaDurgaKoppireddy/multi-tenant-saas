@@ -211,3 +211,27 @@ exports.me = async (req, res, next) => {
   }
 };
 
+exports.logout = async (req, res, next) => {
+  try {
+    const { id: userId, tenantId } = req.user;
+
+    // Log audit action
+    await knex('audit_logs').insert({
+      id: require('uuid').v4(),
+      user_id: userId,
+      tenant_id: tenantId,
+      action: 'LOGOUT',
+      entity_type: 'auth',
+      entity_id: userId,
+      created_at: new Date()
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
