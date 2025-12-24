@@ -155,3 +155,59 @@ exports.login = async (req, res, next) => {
   }
 };
 
+exports.me = async (req, res, next) => {
+  try {
+    if (!req.user) {
+  return res.status(500).json({ error: 'req.user is missing' });
+}
+    console.log('REQ.USER 👉', req.user); // 👈 ADD THIS
+    const userId = req.user.id;
+    const user = await knex('users')
+      .join('tenants', 'users.tenant_id', 'tenants.id')
+      .select(
+        'users.id',
+        'users.email',
+        'users.full_name',
+        'users.role',
+        'users.is_active',
+        'tenants.id as tenant_id',
+        'tenants.name as tenant_name',
+        'tenants.subdomain',
+        'tenants.subscription_plan',
+        'tenants.max_users',
+        'tenants.max_projects'
+      )
+      .where('users.id', userId )
+      .first();
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (!user.is_active) {
+      return res.status(403).json({ success: false, message: 'Account inactive' });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        id: user.id,
+        email: user.email,
+        fullName: user.full_name,
+        role: user.role,
+        isActive: user.is_active,
+        tenant: {
+          id: user.tenant_id,
+          name: user.tenant_name,
+          subdomain: user.subdomain,
+          subscriptionPlan: user.subscription_plan,
+          maxUsers: user.max_users,
+          maxProjects: user.max_projects,
+        },
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+

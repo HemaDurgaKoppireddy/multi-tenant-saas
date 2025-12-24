@@ -51,7 +51,6 @@ services:
     command: >
       sh -c "
       npx knex migrate:latest &&
-      npx knex seed:run &&
       node src/app.js
       "
 
