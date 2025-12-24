@@ -1,12 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
+const tenantRoutes = require('./routes/tenants');
 
 const app = express();
 
 // 1. Global Middleware
 app.use(cors());
 app.use(express.json()); // Only need this once
+app.use('/api/tenants', tenantRoutes);
 
 // 2. Routes
 app.get('/', (req, res) => {
