@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
 import ProjectModal from "../components/ProjectModal";
@@ -12,6 +13,7 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editProject, setEditProject] = useState(null);
+  const navigate = useNavigate();
 
   const loadProjects = async () => {
     setLoading(true);
@@ -43,19 +45,11 @@ export default function Projects() {
 
   return (
     <>
-      <Navbar />
-
       <div className="page-wrapper">
         <div className="page-header">
           <h1>Projects</h1>
-          <button
-            className="primary-btn"
-            onClick={() => {
-              setEditProject(null);
-              setModalOpen(true);
-            }}
-          >
-            + Create New Project
+          <button className="primary-btn" onClick={() => setModalOpen(true)}>
+            + New Project
           </button>
         </div>
 
@@ -93,16 +87,12 @@ export default function Projects() {
                 </div>
 
                 <div className="footer">
-                  <small>
-                    Created by {p.createdBy?.fullName || "—"}
-                  </small>
-                  <small>
-                    {new Date(p.createdAt).toLocaleDateString()}
-                  </small>
+                  <small>Created by {p.createdBy?.fullName || "—"}</small>
+                  <small>{new Date(p.createdAt).toLocaleDateString()}</small>
                 </div>
 
                 <div className="actions">
-                  <button onClick={() => (window.location.href = `/projects/${p.id}`)}>
+                  <button onClick={() => navigate(`/projects/${p.id}`)}>
                     View
                   </button>
                   <button

@@ -21,42 +21,79 @@ export default function Navbar() {
     <nav className="navbar">
       {/* LEFT */}
       <div className="navbar-left">
-        <span className="logo">MultiTenant SaaS</span>
+        <span
+          className="logo"
+          onClick={() => navigate("/dashboard")}
+        >
+          MultiTenant SaaS
+        </span>
       </div>
 
-      {/* HAMBURGER */}
-      <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+      {/* HAMBURGER (MOBILE) */}
+      <div
+        className="hamburger"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
         ☰
       </div>
 
-      {/* MENU */}
+      {/* NAV LINKS */}
       <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
-        <li><Link to="/dashboard">Dashboard</Link></li>
-        <li><Link to="/projects">Projects</Link></li>
+        <li>
+          <Link to="/dashboard" onClick={() => setMenuOpen(false)}>
+            Dashboard
+          </Link>
+        </li>
 
+        <li>
+          <Link to="/projects" onClick={() => setMenuOpen(false)}>
+            Projects
+          </Link>
+        </li>
+
+        {/* ✅ REAL TASKS PAGE */}
         {(role === "tenant_admin" || role === "super_admin") && (
-          <li><Link to="/tasks">Tasks</Link></li>
+          <li>
+            <Link to="/tasks" onClick={() => setMenuOpen(false)}>
+              Tasks
+            </Link>
+          </li>
         )}
 
         {role === "tenant_admin" && (
-          <li><Link to="/users">Users</Link></li>
+          <li>
+            <Link to="/users" onClick={() => setMenuOpen(false)}>
+              Users
+            </Link>
+          </li>
         )}
 
         {role === "super_admin" && (
-          <li><Link to="/tenants">Tenants</Link></li>
+          <li>
+            <Link to="/tenants" onClick={() => setMenuOpen(false)}>
+              Tenants
+            </Link>
+          </li>
         )}
       </ul>
 
       {/* USER DROPDOWN */}
-      <div className="user-menu" onClick={() => setDropdownOpen(!dropdownOpen)}>
+      <div
+        className="user-menu"
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+      >
         <span className="user-name">
           {user?.fullName} <small>({role})</small>
         </span>
 
         {dropdownOpen && (
           <div className="dropdown">
-            <button onClick={() => navigate("/profile")}>Profile</button>
-            <button onClick={() => navigate("/settings")}>Settings</button>
+            <button onClick={() => navigate("/profile")}>
+              Profile
+            </button>
+            <button onClick={() => navigate("/settings")}>
+              Settings
+            </button>
             <button className="logout" onClick={handleLogout}>
               Logout
             </button>

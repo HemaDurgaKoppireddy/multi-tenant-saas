@@ -45,8 +45,8 @@
   position: absolute;
   right: 0;
   top: 48px;
-  background: #0f172a;
-  color: #111827;
+  background: #c8cedb;
+  color: #eef0f5;
   border-radius: 8px;
   width: 160px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
@@ -63,7 +63,7 @@
 }
 
 .dropdown button:hover {
-  background: #404040;
+  background: #dde1eb;
 }
 
 .dropdown .logout {

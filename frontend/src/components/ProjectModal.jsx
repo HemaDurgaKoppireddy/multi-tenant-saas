@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../services/api";
+import "../styles/projectModal.css";
 
 export default function ProjectModal({ project, onClose, onSaved }) {
   const [form, setForm] = useState({
@@ -10,6 +11,8 @@ export default function ProjectModal({ project, onClose, onSaved }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.name.trim()) return;
 
     if (project) {
       await api.put(`/projects/${project.id}`, form);
@@ -22,43 +25,64 @@ export default function ProjectModal({ project, onClose, onSaved }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <h2>{project ? "Edit Project" : "Create Project"}</h2>
+    <div className="modal-backdrop">
+      <div className="modal-card">
+        <div className="modal-header">
+          <h2>{project ? "Edit Project" : "Create Project"}</h2>
+          <button className="close-btn" onClick={onClose}>×</button>
+        </div>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            placeholder="Project Name"
-            required
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
+        <form onSubmit={handleSubmit} className="modal-body">
+          <div className="form-group">
+            <label>Project Name</label>
+            <input
+              type="text"
+              placeholder="Enter project name"
+              value={form.name}
+              onChange={(e) =>
+                setForm({ ...form, name: e.target.value })
+              }
+              required
+            />
+          </div>
 
-          <textarea
-            placeholder="Description"
-            value={form.description}
-            onChange={(e) =>
-              setForm({ ...form, description: e.target.value })
-            }
-          />
+          <div className="form-group">
+            <label>Description</label>
+            <textarea
+              placeholder="Short project description"
+              rows="4"
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+            />
+          </div>
 
-          <select
-            value={form.status}
-            onChange={(e) =>
-              setForm({ ...form, status: e.target.value })
-            }
-          >
-            <option value="active">Active</option>
-            <option value="archived">Archived</option>
-            <option value="completed">Completed</option>
-          </select>
+          <div className="form-group">
+            <label>Status</label>
+            <select
+              value={form.status}
+              onChange={(e) =>
+                setForm({ ...form, status: e.target.value })
+              }
+            >
+              <option value="active">Active</option>
+              <option value="archived">Archived</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
 
           <div className="modal-actions">
-            <button type="button" onClick={onClose}>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={onClose}
+            >
               Cancel
             </button>
-            <button className="primary-btn" type="submit">
-              Save
+
+            <button type="submit" className="btn-primary">
+              Save Project
             </button>
           </div>
         </form>
