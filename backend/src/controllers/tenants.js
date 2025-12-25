@@ -172,3 +172,65 @@ exports.updateTenant = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.listTenants = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 10, 100);
+    const offset = (page - 1) * limit;
+
+    const { status, subscriptionPlan } = req.query;
+
+    // Base query
+    const baseQuery = knex('tenants')
+      .leftJoin('users', 'tenants.id', 'users.tenant_id')
+      .leftJoin('projects', 'tenants.id', 'projects.tenant_id');
+
+    if (status) {
+      baseQuery.where('tenants.status', status);
+    }
+
+    if (subscriptionPlan) {
+      baseQuery.where('tenants.subscription_plan', subscriptionPlan);
+    }
+
+    // MAIN DATA QUERY
+    const tenants = await baseQuery
+      .select(
+        'tenants.id',
+        'tenants.name',
+        'tenants.subdomain',
+        'tenants.status',
+        'tenants.subscription_plan as subscriptionPlan',
+        'tenants.created_at as createdAt'
+      )
+      .countDistinct('users.id as totalUsers')
+      .countDistinct('projects.id as totalProjects')
+      .groupBy('tenants.id')
+      .limit(limit)
+      .offset(offset);
+
+    // TOTAL COUNT (for pagination)
+    const [{ count }] = await knex('tenants').count('*');
+
+    res.json({
+      success: true,
+      data: {
+        tenants,
+        pagination: {
+          currentPage: page,
+          totalPages: Math.ceil(count / limit),
+          totalTenants: parseInt(count),
+          limit
+        }
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+};
+

@@ -10,5 +10,5 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "npx knex migrate:latest && npx knex seed:run && node src/app.js"]
+CMD ["node", "src/app.js"]
 

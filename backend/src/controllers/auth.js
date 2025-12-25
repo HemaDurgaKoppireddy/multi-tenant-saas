@@ -1,33 +1,47 @@
-const bcrypt = require('bcrypt');
-const { v4: uuid } = require('uuid');
-const knex = require('../utils/db');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const { v4: uuid } = require("uuid");
+const knex = require("../utils/db");
+const jwt = require("jsonwebtoken");
 
 exports.registerTenant = async (req, res, next) => {
-  const { tenantName, subdomain, adminEmail, adminPassword, adminFullName } = req.body;
+  const { tenantName, subdomain, adminEmail, adminPassword, adminFullName } =
+    req.body;
 
-  if (!tenantName || !subdomain || !adminEmail || !adminPassword || !adminFullName) {
-    return res.status(400).json({ success: false, message: 'All fields are required' });
+  if (
+    !tenantName ||
+    !subdomain ||
+    !adminEmail ||
+    !adminPassword ||
+    !adminFullName
+  ) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
   }
 
   try {
     await knex.transaction(async (trx) => {
       // Check if subdomain or email exists
-      const existingTenant = await trx('tenants').where({ subdomain }).first();
-      const existingUser = await trx('users').where({ email: adminEmail }).first();
+      const existingTenant = await trx("tenants").where({ subdomain }).first();
+      const existingUser = await trx("users")
+        .where({ email: adminEmail })
+        .first();
 
       if (existingTenant || existingUser) {
-        return res.status(409).json({ success: false, message: 'Subdomain or email already exists' });
+        return res.status(409).json({
+          success: false,
+          message: "Subdomain or email already exists",
+        });
       }
 
       // Create tenant
       const tenantId = uuid();
-      await trx('tenants').insert({
+      await trx("tenants").insert({
         id: tenantId,
         name: tenantName,
         subdomain,
-        status: 'active',
-        subscription_plan: 'free', // default
+        status: "active",
+        subscription_plan: "free", // default
         max_users: 5,
         max_projects: 10,
       });
@@ -36,19 +50,19 @@ exports.registerTenant = async (req, res, next) => {
       const hashedPassword = await bcrypt.hash(adminPassword, 10);
       const adminId = uuid();
 
-      await trx('users').insert({
+      await trx("users").insert({
         id: adminId,
         tenant_id: tenantId,
         email: adminEmail,
         password_hash: hashedPassword,
         full_name: adminFullName,
-        role: 'tenant_admin',
+        role: "tenant_admin",
         is_active: true,
       });
 
       res.status(201).json({
         success: true,
-        message: 'Tenant registered successfully',
+        message: "Tenant registered successfully",
         data: {
           tenantId,
           subdomain,
@@ -56,7 +70,7 @@ exports.registerTenant = async (req, res, next) => {
             id: adminId,
             email: adminEmail,
             fullName: adminFullName,
-            role: 'tenant_admin',
+            role: "tenant_admin",
           },
         },
       });
@@ -67,75 +81,100 @@ exports.registerTenant = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  const { email, password, tenantSubdomain } = req.body;
-
-  if (!email || !password || !tenantSubdomain) {
-    return res.status(400).json({
-      success: false,
-      message: 'Email, password, and tenantSubdomain are required'
-    });
-  }
+  const { email, password, tenantSubdomain, tenantId } = req.body;
 
   try {
-    // Find tenant
-    const tenant = await knex('tenants')
-      .where({ subdomain: tenantSubdomain })
-      .first();
+    let user;
+    let tenant = null;
 
-    if (!tenant) {
-      return res.status(404).json({
-        success: false,
-        message: 'Tenant not found'
-      });
+    // 🔑 SUPER ADMIN LOGIN (NO TENANT)
+    if (!tenantSubdomain) {
+      user = await knex("users").where({ email, role: "super_admin" }).first();
+
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid credentials",
+        });
+      }
     }
+    // 🏢 TENANT USER LOGIN
+    else {
+      if (!tenantSubdomain && !tenantId) {
+        return res.status(400).json({
+          success: false,
+          message: "tenantSubdomain or tenantId is required",
+        });
+      }
 
-    if (tenant.status !== 'active') {
-      return res.status(403).json({
-        success: false,
-        message: 'Tenant is not active'
-      });
-    }
+      tenant = tenantSubdomain
+        ? await knex("tenants").where({ subdomain: tenantSubdomain }).first()
+        : await knex("tenants").where({ id: tenantId }).first();
 
-    // Find user
-    const user = await knex('users')
-      .where({ email, tenant_id: tenant.id })
-      .first();
+      if (!tenant) {
+        return res.status(404).json({
+          success: false,
+          message: "Tenant not found",
+        });
+      }
 
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid credentials'
-      });
+      if (tenant.status !== "active") {
+        return res.status(403).json({
+          success: false,
+          message: "Tenant is not active",
+        });
+      }
+
+      user = await knex("users").where({ email, tenant_id: tenant.id }).first();
+
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid credentials",
+        });
+      }
     }
 
     if (user.is_active === false) {
       return res.status(403).json({
         success: false,
-        message: 'Account is inactive'
+        message: "Account is inactive",
+      });
+    }
+    if (user.role === "super_admin" && tenantSubdomain) {
+      return res.status(400).json({
+        success: false,
+        message: "Super admin must login without tenantSubdomain",
       });
     }
 
-    // Verify password
+    if (user.role !== "super_admin" && !tenantSubdomain) {
+      return res.status(400).json({
+        success: false,
+        message: "Tenant users must login with tenantSubdomain",
+      });
+    }
+    // 🔐 Password check
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: "Invalid credentials",
       });
     }
 
-    // Generate JWT
+    // 🎫 JWT
     const token = jwt.sign(
       {
         userId: user.id,
-        tenantId: tenant.id,
-        role: user.role
+        tenantId: tenant ? tenant.id : null,
+        role: user.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
+      { expiresIn: "24h" }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         user: {
@@ -143,67 +182,10 @@ exports.login = async (req, res, next) => {
           email: user.email,
           fullName: user.full_name,
           role: user.role,
-          tenantId: tenant.id
+          tenantId: tenant ? tenant.id : null,
         },
         token,
-        expiresIn: 86400
-      }
-    });
-
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.me = async (req, res, next) => {
-  try {
-    if (!req.user) {
-  return res.status(500).json({ error: 'req.user is missing' });
-}
-    console.log('REQ.USER 👉', req.user); // 👈 ADD THIS
-    const userId = req.user.id;
-    const user = await knex('users')
-      .join('tenants', 'users.tenant_id', 'tenants.id')
-      .select(
-        'users.id',
-        'users.email',
-        'users.full_name',
-        'users.role',
-        'users.is_active',
-        'tenants.id as tenant_id',
-        'tenants.name as tenant_name',
-        'tenants.subdomain',
-        'tenants.subscription_plan',
-        'tenants.max_users',
-        'tenants.max_projects'
-      )
-      .where('users.id', userId )
-      .first();
-
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-
-    if (!user.is_active) {
-      return res.status(403).json({ success: false, message: 'Account inactive' });
-    }
-
-    res.json({
-      success: true,
-      data: {
-        id: user.id,
-        email: user.email,
-        fullName: user.full_name,
-        role: user.role,
-        isActive: user.is_active,
-        tenant: {
-          id: user.tenant_id,
-          name: user.tenant_name,
-          subdomain: user.subdomain,
-          subscriptionPlan: user.subscription_plan,
-          maxUsers: user.max_users,
-          maxProjects: user.max_projects,
-        },
+        expiresIn: 86400,
       },
     });
   } catch (err) {
@@ -211,27 +193,58 @@ exports.me = async (req, res, next) => {
   }
 };
 
-exports.logout = async (req, res, next) => {
-  try {
-    const { id: userId, tenantId } = req.user;
-
-    // Log audit action
-    await knex('audit_logs').insert({
-      id: require('uuid').v4(),
-      user_id: userId,
-      tenant_id: tenantId,
-      action: 'LOGOUT',
-      entity_type: 'auth',
-      entity_id: userId,
-      created_at: new Date()
+exports.me = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: "Token invalid or expired",
     });
-
-    return res.status(200).json({
-      success: true,
-      message: 'Logged out successfully'
-    });
-  } catch (err) {
-    next(err);
   }
+
+  const user = req.user;
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      id: user.id,
+      email: user.email,
+      fullName: user.fullName,
+      role: user.role,
+      isActive: true,
+      tenant: user.tenant
+        ? {
+            id: user.tenant.id,
+            name: user.tenant.name,
+            subdomain: user.tenant.subdomain,
+            subscriptionPlan: user.tenant.subscriptionPlan,
+            maxUsers: user.tenant.maxUsers,
+            maxProjects: user.tenant.maxProjects,
+          }
+        : null,
+    },
+  });
+};
+
+exports.logout = async (req, res) => {
+  try {
+    if (req.user) {
+      await knex("audit_logs").insert({
+        id: uuid(),
+        user_id: req.user.id,
+        tenant_id: req.user.tenantId,
+        action: "LOGOUT",
+        entity_type: "auth",
+        entity_id: req.user.id,
+        created_at: new Date(),
+      });
+    }
+  } catch (err) {
+    // ignore logging errors
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
 };
 
