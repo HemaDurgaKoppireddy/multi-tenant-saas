@@ -1,25 +1,36 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/navbar.css";
 
-
 export default function Navbar() {
   const { user, logout } = useAuth();
-  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const role = user?.role;
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <nav className="navbar">
-      <div className="nav-left">
-        <h3 className="logo">MultiTenant SaaS</h3>
-        <button className="hamburger" onClick={() => setOpen(!open)}>
-          ☰
-        </button>
+      {/* LEFT */}
+      <div className="navbar-left">
+        <span className="logo">MultiTenant SaaS</span>
       </div>
 
-      <ul className={`nav-links ${open ? "open" : ""}`}>
+      {/* HAMBURGER */}
+      <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+        ☰
+      </div>
+
+      {/* MENU */}
+      <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
         <li><Link to="/dashboard">Dashboard</Link></li>
         <li><Link to="/projects">Projects</Link></li>
 
@@ -36,9 +47,21 @@ export default function Navbar() {
         )}
       </ul>
 
-      <div className="nav-user">
-        <span>{user?.fullName} ({role})</span>
-        <button onClick={logout}>Logout</button>
+      {/* USER DROPDOWN */}
+      <div className="user-menu" onClick={() => setDropdownOpen(!dropdownOpen)}>
+        <span className="user-name">
+          {user?.fullName} <small>({role})</small>
+        </span>
+
+        {dropdownOpen && (
+          <div className="dropdown">
+            <button onClick={() => navigate("/profile")}>Profile</button>
+            <button onClick={() => navigate("/settings")}>Settings</button>
+            <button className="logout" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   );
