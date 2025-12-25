@@ -7,6 +7,8 @@ import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import ProjectDetails from "./pages/ProjectDetails";
+import MyTasks from "./pages/MyTasks";
+import Users from "./pages/Users";
 import "./styles/layout.css";
 
 export default function App() {
@@ -29,7 +31,7 @@ export default function App() {
             }
           /> */}
 
-          {/* 🔐 PROTECTED ROUTES */}
+          {/* PROTECTED ROUTES */}
           <Route
             path="/dashboard"
             element={
@@ -48,6 +50,15 @@ export default function App() {
             }
           />
           <Route path="/projects/:projectId" element={<ProjectDetails />} />
+          <Route path="/tasks" element={<MyTasks />} />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute roles={["tenant_admin"]}>
+                <Users />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

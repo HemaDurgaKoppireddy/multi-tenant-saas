@@ -31,7 +31,7 @@ export default function ProjectDetails() {
   try {
     setLoading(true);
 
-    // ✅ Get all projects (backend-supported)
+    // Get all projects (backend-supported)
     const projectsRes = await api.get("/projects");
     const projects = projectsRes.data.data.projects || [];
 
@@ -44,7 +44,7 @@ export default function ProjectDetails() {
 
     setProject(foundProject);
 
-    // ✅ Get tasks for this project
+    // Get tasks for this project
     const taskRes = await api.get(`/projects/${projectId}/tasks`);
     setTasks(taskRes.data.data.tasks || []);
 

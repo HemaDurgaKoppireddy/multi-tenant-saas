@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/navbar.css";
 
@@ -21,19 +22,13 @@ export default function Navbar() {
     <nav className="navbar">
       {/* LEFT */}
       <div className="navbar-left">
-        <span
-          className="logo"
-          onClick={() => navigate("/dashboard")}
-        >
+        <span className="logo" onClick={() => navigate("/dashboard")}>
           MultiTenant SaaS
         </span>
       </div>
 
       {/* HAMBURGER (MOBILE) */}
-      <div
-        className="hamburger"
-        onClick={() => setMenuOpen(!menuOpen)}
-      >
+      <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         ☰
       </div>
 
@@ -51,12 +46,18 @@ export default function Navbar() {
           </Link>
         </li>
 
-        {/* ✅ REAL TASKS PAGE */}
+        {/* REAL TASKS PAGE */}
         {(role === "tenant_admin" || role === "super_admin") && (
           <li>
-            <Link to="/tasks" onClick={() => setMenuOpen(false)}>
+            {/* <Link to="/tasks" onClick={() => setMenuOpen(false)}>
               Tasks
-            </Link>
+            </Link> */}
+            <NavLink
+              to="/tasks"
+              className={({ isActive }) => (isActive ? "active-link" : "")}
+            >
+              Tasks
+            </NavLink>
           </li>
         )}
 
@@ -78,22 +79,15 @@ export default function Navbar() {
       </ul>
 
       {/* USER DROPDOWN */}
-      <div
-        className="user-menu"
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-      >
+      <div className="user-menu" onClick={() => setDropdownOpen(!dropdownOpen)}>
         <span className="user-name">
           {user?.fullName} <small>({role})</small>
         </span>
 
         {dropdownOpen && (
           <div className="dropdown">
-            <button onClick={() => navigate("/profile")}>
-              Profile
-            </button>
-            <button onClick={() => navigate("/settings")}>
-              Settings
-            </button>
+            <button onClick={() => navigate("/profile")}>Profile</button>
+            <button onClick={() => navigate("/settings")}>Settings</button>
             <button className="logout" onClick={handleLogout}>
               Logout
             </button>

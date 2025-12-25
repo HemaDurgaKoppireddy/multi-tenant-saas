@@ -26,7 +26,7 @@ export default function Register() {
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
   };
 
-  // ✅ CLIENT-SIDE VALIDATION
+  // CLIENT-SIDE VALIDATION
   const validate = () => {
     if (!form.organizationName) return "Organization name is required";
     if (!form.subdomain) return "Subdomain is required";
@@ -41,7 +41,7 @@ export default function Register() {
     return null;
   };
 
-  // ✅ REGISTER SUBMIT (MATCHES BACKEND EXACTLY)
+  // REGISTER SUBMIT (MATCHES BACKEND EXACTLY)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -56,7 +56,7 @@ export default function Register() {
     try {
       setLoading(true);
 
-      // 🔑 PAYLOAD MATCHES STEP 3.1 API CONTRACT
+      // PAYLOAD MATCHES STEP 3.1 API CONTRACT
       await api.post("/auth/register-tenant", {
         tenantName: form.organizationName,
         subdomain: form.subdomain,

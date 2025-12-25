@@ -23,7 +23,7 @@ export default function Login() {
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
   };
 
-  // ✅ FRONTEND-ONLY FIX (BACKEND SAFE)
+  // FRONTEND-ONLY FIX (BACKEND SAFE)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -31,7 +31,7 @@ export default function Login() {
     try {
       setLoading(true);
 
-      // 🔑 Transform payload to EXACT backend contract
+      // Transform payload to EXACT backend contract
       await login({
         email: form.email,
         password: form.password,

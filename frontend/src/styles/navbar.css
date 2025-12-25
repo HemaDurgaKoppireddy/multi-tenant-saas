@@ -78,6 +78,19 @@
   cursor: pointer;
 }
 
+.nav-links a {
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.nav-links a.active-link {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+
 /* MOBILE */
 @media (max-width: 768px) {
   .hamburger {
