@@ -1,4 +1,4 @@
-module.exports = (role) => {
+module.exports = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({
@@ -7,10 +7,10 @@ module.exports = (role) => {
       });
     }
 
-    if (req.user.role !== role) {
+    if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: `Requires ${role} role`
+        message: `Requires ${roles.join(' or ')} role`
       });
     }
 
