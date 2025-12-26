@@ -71,7 +71,6 @@
   font-weight: 600;
 }
 
-/* HAMBURGER */
 .hamburger {
   display: none;
   font-size: 24px;
@@ -91,7 +90,6 @@
 }
 
 
-/* MOBILE */
 @media (max-width: 768px) {
   .hamburger {
     display: block;

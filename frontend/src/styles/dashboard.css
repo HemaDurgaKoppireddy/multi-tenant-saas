@@ -23,7 +23,6 @@
   margin-top: 6px;
 }
 
-/* STATS */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -55,7 +54,6 @@
   border-left: 5px solid #f59e0b;
 }
 
-/* PROJECTS */
 .section {
   margin-top: 40px;
 }
@@ -123,7 +121,7 @@
   color: #6b7280;
 }
 
-/* EMPTY + LOADING */
+
 .empty-state {
   background: white;
   padding: 40px;

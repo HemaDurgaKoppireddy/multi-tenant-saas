@@ -21,7 +21,7 @@ export default function EditProjectInline({ project, onUpdated }) {
         description,
       });
       setEditing(false);
-      onUpdated(); // reload project details
+      onUpdated(); 
     } catch (err) {
       setError("Failed to update project");
     } finally {
