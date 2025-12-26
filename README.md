@@ -25,6 +25,12 @@ It is designed for **startups, enterprises, and SaaS product teams** that requir
 
 ---
 
+
+## Demo Video : 
+
+    https://drive.google.com/file/d/1k1GVZgcB4lPsFIcSv3UWt8duZsAN7P0A/view?usp=sharing
+
+
 ## Technology Stack
 
 ### Frontend
