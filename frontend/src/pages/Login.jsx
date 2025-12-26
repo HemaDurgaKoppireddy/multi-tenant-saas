@@ -90,7 +90,7 @@ export default function Login() {
               placeholder="Tenant Subdomain"
               value={form.subdomain}
               onChange={handleChange}
-              required
+             
             />
 
             <div className="auth-options">

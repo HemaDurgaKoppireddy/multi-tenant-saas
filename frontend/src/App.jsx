@@ -9,6 +9,7 @@ import ProtectedLayout from "./layouts/ProtectedLayout";
 import ProjectDetails from "./pages/ProjectDetails";
 import MyTasks from "./pages/MyTasks";
 import Users from "./pages/Users";
+import Tenants from "./pages/Tenants";
 import "./styles/layout.css";
 
 export default function App() {
@@ -56,6 +57,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={["tenant_admin"]}>
                 <Users />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tenants"
+            element={
+              <ProtectedRoute roles={["super_admin"]}>
+                <Tenants />
               </ProtectedRoute>
             }
           />
