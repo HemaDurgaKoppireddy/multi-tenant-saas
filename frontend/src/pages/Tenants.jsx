@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
+import "../styles/tenants.css";
+import Navbar from "../components/Navbar";
 
 export default function Tenants() {
-  const { token } = useAuth();
   const [tenants, setTenants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -10,20 +11,9 @@ export default function Tenants() {
   useEffect(() => {
     const loadTenants = async () => {
       try {
-        const res = await fetch("/api/tenants", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (res.status === 403) {
-          setError("Access denied");
-          return;
-        }
-
-        const data = await res.json();
-        setTenants(data.data.tenants);
-      } catch {
+        const res = await api.get("/tenants");
+        setTenants(res.data.data.tenants);
+      } catch (err) {
         setError("Failed to load tenants");
       } finally {
         setLoading(false);
@@ -31,39 +21,51 @@ export default function Tenants() {
     };
 
     loadTenants();
-  }, [token]);
+  }, []);
 
-  if (loading) return <p>Loading tenants...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (loading) return <p className="page-loading">Loading tenants...</p>;
+  if (error) return <p className="error-text">{error}</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>All Tenants</h2>
+    <>
+    <Navbar />
+    <div className="tenants-page">
+      <h1 className="page-title">All Tenants</h1>
 
-      <table border="1" cellPadding="10">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Subdomain</th>
-            <th>Status</th>
-            <th>Plan</th>
-            <th>Users</th>
-            <th>Projects</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tenants.map((t) => (
-            <tr key={t.id}>
-              <td>{t.name}</td>
-              <td>{t.subdomain}</td>
-              <td>{t.status}</td>
-              <td>{t.subscriptionPlan}</td>
-              <td>{t.totalUsers}</td>
-              <td>{t.totalProjects}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="tenants-grid">
+        {tenants.map((t) => (
+          <div key={t.id} className="tenant-card">
+            <div className="tenant-header">
+              <h3>{t.name}</h3>
+              <span className={`status ${t.status}`}>
+                {t.status.toUpperCase()}
+              </span>
+            </div>
+
+            <p className="subdomain">
+              <strong>Subdomain:</strong> {t.subdomain}
+            </p>
+
+            <div className="badges">
+              <span className={`plan ${t.subscriptionPlan}`}>
+                {t.subscriptionPlan.toUpperCase()} PLAN
+              </span>
+            </div>
+
+            <div className="stats">
+              <div>
+                <span className="stat-number">{t.totalUsers}</span>
+                <span className="stat-label">Users</span>
+              </div>
+              <div>
+                <span className="stat-number">{t.totalProjects}</span>
+                <span className="stat-label">Projects</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
+    </>
   );
 }
