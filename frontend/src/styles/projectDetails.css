@@ -1,15 +1,9 @@
-/* ===============================
-   PAGE WRAPPER
-================================ */
 .project-wrapper {
   max-width: 1280px;
   margin: auto;
   padding: 32px 24px;
 }
 
-/* ===============================
-   PROJECT HEADER
-================================ */
 .project-header {
   display: flex;
   justify-content: space-between;
