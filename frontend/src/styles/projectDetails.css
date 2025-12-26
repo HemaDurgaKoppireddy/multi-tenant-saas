@@ -191,9 +191,6 @@
   font-weight: 600;
 }
 
-/* ===============================
-   INLINE PROJECT EDIT
-================================ */
 .inline-project-view h1 {
   margin-bottom: 6px;
 }
@@ -212,9 +209,6 @@
   gap: 10px;
 }
 
-/* ===============================
-   LINK BUTTON
-================================ */
 .link-btn {
   background: none;
   border: none;
@@ -224,18 +218,12 @@
   font-size: 14px;
 }
 
-/* ===============================
-   EMPTY STATE
-================================ */
 .empty-state {
   text-align: center;
   padding: 40px;
   color: #6b7280;
 }
 
-/* ===============================
-   RESPONSIVE (MOBILE)
-================================ */
 @media (max-width: 768px) {
 
   .project-wrapper {
