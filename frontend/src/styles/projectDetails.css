@@ -262,7 +262,6 @@
     text-align: center;
   }
 
-  /* TABLE → CARD VIEW */
   .task-table thead {
     display: none;
   }
@@ -283,7 +282,6 @@
   border: none;
 }
 
-/* Label (mobile view) */
 .task-table td::before {
   content: attr(data-label);
   min-width: 90px;
@@ -291,19 +289,16 @@
   color: #475569;
 }
 
-/* Task title alignment */
 .task-table td:first-child {
   font-weight: 600;
   color: #0f172a;
 }
 
-/* Status & priority badges */
 .badge,
 .priority {
   display: inline-block;
 }
 
-/* Actions column */
 .task-actions {
   display: flex;
   gap: 8px;
