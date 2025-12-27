@@ -25,11 +25,51 @@ It is designed for **startups, enterprises, and SaaS product teams** that requir
 
 ---
 
+## Quick Start
+
+```bash
+# Clone & Run (All services)
+git clone <repo>
+cd project
+docker-compose up -d
+
+# Access:
+# Frontend: http://localhost:3000
+# Backend:  http://localhost:5000/api
+# Database: localhost:5432
+```
+
+##  Test Credentials
+
+| Role         | Email                   | Password   | Tenant |
+| ------------ | ----------------------- | ---------- | ------ |
+| Super Admin  | `superadmin@system.com` | `Admin123` | None   |
+| Tenant Admin | `admin@demo.com`        | `Demo123`  | `demo` |
+| User         | `user1@demo.com`        | `User123`  | `demo` |
+
+##  Project Structure
+
+```text
+├── backend/          # Node.js + Express API
+├── frontend/         # React SPA
+├── database/         # Migrations + Seeds
+├── docs/             # API, Architecture, ERD
+└── docker-compose.yml
+```
+
+##  Services
+
+| Service  | Port    | Status                                                                 |
+| -------- | ------- | ---------------------------------------------------------------------- |
+| Frontend | `:3000` |  [http://localhost:3000](http://localhost:3000)                       |
+| Backend  | `:5000` |  [http://localhost:5000/api/health](http://localhost:5000/api/health) |
+| Database | `:5432` |  PostgreSQL (saasdb)   
 
 ## Demo Video : 
 
     https://drive.google.com/file/d/1k1GVZgcB4lPsFIcSv3UWt8duZsAN7P0A/view?usp=sharing
 
+---
 
 ## Technology Stack
 
@@ -69,9 +109,10 @@ The system follows a **three-tier architecture**:
 3. **Database (PostgreSQL)**  
    Stores tenant, user, project, task, and audit log data with strict foreign key constraints.
 
-### Architecture Diagram
+**Architecture Diagram**
 
-![System Architecture](docs/images/system-architecture.png)
+* [System Architecture](docs/images/system-architecture.png)
+* [Database ERD](docs/images/database-erd.png)
 
 ---
 
@@ -91,9 +132,14 @@ Ensure the following are installed:
 
 ### Local Setup (Docker – Recommended)
 
-This project is **fully containerized** and requires only **one command** to start.
+##  Docker Commands
 
-docker-compose up -d
+```bash
+docker-compose up -d          # Start all
+docker-compose down           # Stop
+docker-compose logs backend   # View logs
+docker exec -it backend sh    # Shell access
+```
 
 ## Automatic Startup Behavior
 
@@ -107,15 +153,14 @@ When running the application using Docker Compose, the following steps occur aut
 
 ---
 
-## Service Ports
+##  Documentation
 
-| Service   | Port |
-|----------|------|
-| Frontend | 3000 |
-| Backend  | 5000 |
-| Database | 5432 |
-
----
+| File                   | Description            |
+| ---------------------- | ---------------------- |
+| `docs/API.md`          | 22 APIs with examples  |
+| `docs/architecture.md` | System design + ERD    |
+| `docs/PRD.md`          | Product requirements   |
+| `submission.json`      | Evaluation credentials |
 
 ## Health Check
 
