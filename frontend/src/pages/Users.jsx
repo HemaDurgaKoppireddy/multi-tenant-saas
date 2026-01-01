@@ -148,16 +148,22 @@ export default function Users() {
                   <td>{u.fullName}</td>
                   <td>{u.email}</td>
 
-                  <td className="center">
-                    <span className={`role ${u.role}`}>{u.role}</span>
+                  <td>
+                    <div className="cell-center">
+                      <span className={`role ${u.role}`}>{u.role}</span>
+                    </div>
                   </td>
 
-                  <td className="center">
-                    <span
-                      className={`status ${u.isActive ? "active" : "inactive"}`}
-                    >
-                      {u.isActive ? "Active" : "Inactive"}
-                    </span>
+                  <td>
+                    <div className="cell-center">
+                      <span
+                        className={`status ${
+                          u.isActive ? "active" : "inactive"
+                        }`}
+                      >
+                        {u.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </div>
                   </td>
 
                   <td>{new Date(u.createdAt).toLocaleDateString()}</td>

@@ -52,13 +52,33 @@
 .center {
   text-align: center;
 }
-
+/* UNIVERSAL CELL CENTER WRAPPER */
+.cell-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
 /* FIXED ACTION COLUMN */
 .actions-col {
   width: 160px;
 }
 
 /* ROLE BADGE */
+/* SHARED PILL STYLE */
+/* FORCE TABLE CELL CONSISTENCY */
+.users-table td {
+  vertical-align: middle;
+}
+
+/* UNIVERSAL CELL CENTER WRAPPER */
+.cell-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 /* SHARED PILL STYLE */
 .role,
 .status {
