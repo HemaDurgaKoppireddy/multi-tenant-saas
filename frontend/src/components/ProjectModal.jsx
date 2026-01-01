@@ -11,7 +11,6 @@ export default function ProjectModal({ project, onClose, onSaved }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!form.name.trim()) return;
 
     if (project) {
@@ -27,11 +26,15 @@ export default function ProjectModal({ project, onClose, onSaved }) {
   return (
     <div className="modal-backdrop">
       <div className="modal-card">
+        {/* HEADER */}
         <div className="modal-header">
-          <h2>{project ? "Edit Project" : "Create Project"}</h2>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <h2>{project ? "Edit Project" : "Create New Project"}</h2>
+          <button className="close-btn" onClick={onClose} aria-label="Close">
+            ×
+          </button>
         </div>
 
+        {/* BODY */}
         <form onSubmit={handleSubmit} className="modal-body">
           <div className="form-group">
             <label>Project Name</label>
@@ -72,6 +75,7 @@ export default function ProjectModal({ project, onClose, onSaved }) {
             </select>
           </div>
 
+          {/* ACTIONS */}
           <div className="modal-actions">
             <button
               type="button"

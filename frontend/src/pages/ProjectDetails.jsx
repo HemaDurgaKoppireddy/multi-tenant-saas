@@ -101,7 +101,6 @@ export default function ProjectDetails() {
 
   return (
     <>
-      <Navbar />
       <div className="app-container">
         <div className="project-wrapper">
           {/* ================= PROJECT HEADER ================= */}

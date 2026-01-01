@@ -1,109 +1,247 @@
+/* =========================
+   PAGE LAYOUT
+========================= */
 .page-wrapper {
-  max-width: 1280px;
-  margin: auto;
-  padding: 32px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
 }
 
+/* =========================
+   HEADER
+========================= */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 24px;
 }
 
+.page-header h1 {
+  font-size: 26px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* =========================
+   PRIMARY BUTTON
+========================= */
 .primary-btn {
-  background: #2563eb;
-  color: white;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
   padding: 10px 18px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
   font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+}
 
+/* =========================
+   FILTERS
+========================= */
 .filters {
   display: flex;
-  gap: 12px;
-  margin: 20px 0;
+  gap: 14px;
+  margin-bottom: 24px;
 }
 
 .filters input,
 .filters select {
-  padding: 8px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
   border: 1px solid #d1d5db;
+  font-size: 14px;
+  outline: none;
+  min-width: 200px;
 }
 
+.filters input:focus,
+.filters select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* =========================
+   GRID
+========================= */
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px;
 }
 
+/* =========================
+   CARD
+========================= */
 .project-card {
-  background: white;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+.project-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
 }
 
 .project-card p {
   color: #6b7280;
-  margin: 10px 0;
+  margin: 10px 0 14px;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
+/* =========================
+   META INFO
+========================= */
 .meta {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  margin-bottom: 8px;
 }
 
+.status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.archived {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status.completed {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+/* =========================
+   FOOTER
+========================= */
 .footer {
   font-size: 12px;
   color: #6b7280;
-  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
 }
 
+/* =========================
+   ACTIONS
+========================= */
 .actions {
   display: flex;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: auto;
 }
 
 .actions button {
   flex: 1;
-  padding: 6px;
+  padding: 8px;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actions button:hover {
+  background: #f3f4f6;
 }
 
 .actions .danger {
   color: #dc2626;
+  border-color: #fecaca;
 }
 
-/* MODAL */
+.actions .danger:hover {
+  background: #fee2e2;
+}
+
+/* =========================
+   EMPTY / LOADING STATES
+========================= */
+.empty-state,
+.page-loading {
+  text-align: center;
+  padding: 60px 0;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+/* =========================
+   MODAL
+========================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 50;
 }
 
 .modal {
   background: white;
-  padding: 24px;
-  border-radius: 14px;
+  padding: 26px;
+  border-radius: 16px;
   width: 100%;
   max-width: 420px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
 }
 
 .modal form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 640px) {
+  .filters {
+    flex-direction: column;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }

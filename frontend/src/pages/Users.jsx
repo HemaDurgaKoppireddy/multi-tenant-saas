@@ -99,7 +99,6 @@ export default function Users() {
             <button
               className="primary-btn"
               onClick={() => {
-                console.log("Add User clicked");
                 setEditingUser(null);
                 setModalOpen(true);
               }}
@@ -136,10 +135,10 @@ export default function Users() {
               <tr>
                 <th>Full Name</th>
                 <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
+                <th className="center">Role</th>
+                <th className="center">Status</th>
                 <th>Created</th>
-                <th>Actions</th>
+                <th className="center actions-col">Actions</th>
               </tr>
             </thead>
 
@@ -149,11 +148,11 @@ export default function Users() {
                   <td>{u.fullName}</td>
                   <td>{u.email}</td>
 
-                  <td>
+                  <td className="center">
                     <span className={`role ${u.role}`}>{u.role}</span>
                   </td>
 
-                  <td>
+                  <td className="center">
                     <span
                       className={`status ${u.isActive ? "active" : "inactive"}`}
                     >
@@ -163,12 +162,12 @@ export default function Users() {
 
                   <td>{new Date(u.createdAt).toLocaleDateString()}</td>
 
-                  <td className="actions">
+                  <td className="center actions">
                     {isAdmin && (
                       <>
                         <button
+                          className="edit-btn"
                           onClick={() => {
-                            console.log("Edit user", u);
                             setEditingUser(u);
                             setModalOpen(true);
                           }}

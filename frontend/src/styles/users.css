@@ -23,44 +23,104 @@
   border: 1px solid #d1d5db;
 }
 
+/* =========================
+   TABLE
+========================= */
 .users-table {
   width: 100%;
+  border-collapse: collapse;
   background: white;
   border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.users-table th {
+  background: #f9fafb;
+  font-weight: 600;
+  text-align: left;
 }
 
 .users-table th,
 .users-table td {
-  padding: 14px;
+  padding: 14px 16px;
   border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
 }
 
+/* CENTER ALIGN */
+.center {
+  text-align: center;
+}
+
+/* FIXED ACTION COLUMN */
+.actions-col {
+  width: 160px;
+}
+
+/* ROLE BADGE */
+/* SHARED PILL STYLE */
+.role,
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 28px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+/* ROLE COLORS */
 .role.tenant_admin {
   background: #dbeafe;
   color: #1d4ed8;
-  padding: 4px 10px;
-  border-radius: 12px;
 }
 
 .role.user {
   background: #f3f4f6;
-  padding: 4px 10px;
-  border-radius: 12px;
+  color: #374151;
 }
 
+/* STATUS COLORS */
 .status.active {
+  background: #dcfce7;
   color: #16a34a;
 }
 
 .status.inactive {
+  background: #fee2e2;
   color: #dc2626;
 }
 
+/* ACTION BUTTONS */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
 .actions button {
-  margin-right: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: white;
+  cursor: pointer;
+}
+
+.actions .edit-btn:hover {
+  background: #f1f5f9;
 }
 
 .actions .danger {
   color: #dc2626;
+  border-color: #fecaca;
+}
+
+.actions .danger:hover {
+  background: #fee2e2;
 }

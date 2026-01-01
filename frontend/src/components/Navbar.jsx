@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/navbar.css";
 
@@ -18,8 +17,21 @@ export default function Navbar() {
     navigate("/login");
   };
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const closeAll = () => {
+      setDropdownOpen(false);
+      setMenuOpen(false);
+    };
+    window.addEventListener("click", closeAll);
+    return () => window.removeEventListener("click", closeAll);
+  }, []);
+
+  const linkClass = ({ isActive }) =>
+    isActive ? "nav-link active" : "nav-link";
+
   return (
-    <nav className="navbar">
+    <nav className="navbar" onClick={(e) => e.stopPropagation()}>
       {/* LEFT */}
       <div className="navbar-left">
         <span className="logo" onClick={() => navigate("/dashboard")}>
@@ -27,87 +39,81 @@ export default function Navbar() {
         </span>
       </div>
 
-      {/* HAMBURGER (MOBILE) */}
-      <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
-      </div>
-
-      {/* NAV LINKS */}
+      {/* CENTER LINKS */}
       <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
         <li>
-          <Link to="/dashboard" onClick={() => setMenuOpen(false)}>
+          <NavLink to="/dashboard" className={linkClass}>
             Dashboard
-          </Link>
+          </NavLink>
         </li>
 
-        {/* Projects – hide for super admin */}
-        {role !== "super_admin" && (
-          <li>
-            <Link to="/projects" onClick={() => setMenuOpen(false)}>
-              Projects
-            </Link>
-          </li>
-        )}
+        <li>
+          <NavLink to="/projects" className={linkClass}>
+            Projects
+          </NavLink>
+        </li>
 
-        {/* Tasks – visible to all roles */}
-        {(role === "tenant_admin" ||
-          role === "user" ||
-          role === "super_admin") && (
+        {(role === "tenant_admin" || role === "super_admin") && (
           <li>
-            <NavLink
-              to="/tasks"
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) =>
-                isActive ? "active-link" : ""
-              }
-            >
+            <NavLink to="/tasks" className={linkClass}>
               Tasks
             </NavLink>
           </li>
         )}
 
-        {/* Users – tenant admin only */}
         {role === "tenant_admin" && (
           <li>
-            <Link to="/users" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/users" className={linkClass}>
               Users
-            </Link>
+            </NavLink>
           </li>
         )}
 
-        {/* Tenants – super admin only */}
         {role === "super_admin" && (
           <li>
-            <Link to="/tenants" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/tenants" className={linkClass}>
               Tenants
-            </Link>
+            </NavLink>
           </li>
         )}
       </ul>
 
-      {/* USER DROPDOWN */}
-      <div
-        className="user-menu"
-        onClick={(e) => {
-          e.stopPropagation();
-          setDropdownOpen(!dropdownOpen);
-        }}
-      >
-        <span className="user-name">
-          {user?.fullName} <small>({role})</small>
-        </span>
+      {/* RIGHT */}
+      <div className="navbar-right">
+        {/* USER MENU */}
+        <div
+          className="user-menu"
+          onClick={(e) => {
+            e.stopPropagation();
+            setDropdownOpen(!dropdownOpen);
+          }}
+        >
+          <span className="user-name">
+            {user?.fullName} <small>({role})</small>
+          </span>
 
-        {dropdownOpen && (
-          <div className="dropdown">
-            <button onClick={() => navigate("/profile")}>Profile</button>
-            <button onClick={() => navigate("/settings")}>Settings</button>
-            <button className="logout" onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
-        )}
+          {dropdownOpen && (
+            <div className="dropdown">
+              <button onClick={() => navigate("/profile")}>Profile</button>
+              <button onClick={() => navigate("/settings")}>Settings</button>
+              <button className="logout" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* HAMBURGER */}
+        <button
+          className="hamburger"
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuOpen(!menuOpen);
+          }}
+        >
+          ☰
+        </button>
       </div>
     </nav>
   );
 }
-

@@ -17,12 +17,10 @@ export default function Dashboard() {
   useEffect(() => {
     const loadDashboard = async () => {
       try {
-        // Load projects
         const projectRes = await api.get("/projects");
         const projectList = projectRes.data.data.projects || [];
         setProjects(projectList);
 
-        // Load tasks from ALL projects
         const taskRequests = projectList.map((p) =>
           api.get(`/projects/${p.id}/tasks`)
         );
@@ -38,8 +36,6 @@ export default function Dashboard() {
         );
 
         setAllTasks(tasksWithProject);
-
-        // My Tasks
         setMyTasks(
           tasksWithProject.filter(
             (task) => task.assignedTo?.id === user.id
@@ -74,8 +70,12 @@ export default function Dashboard() {
         <div className="dashboard-container">
           {/* HEADER */}
           <div className="dashboard-header">
-            <h1>Dashboard</h1>
-            <p>Welcome back, {user.fullName}</p>
+            <div>
+              <h1>Dashboard</h1>
+              <p className="subtitle">
+                Welcome back, <strong>{user.fullName}</strong>
+              </p>
+            </div>
           </div>
 
           {/* STATS */}
@@ -96,23 +96,27 @@ export default function Dashboard() {
 
           {/* RECENT PROJECTS */}
           <Section title="Recent Projects">
-            <div className="project-grid">
-              {projects.slice(0, 5).map((project) => (
-                <div
-                  key={project.id}
-                  className="project-card"
-                  onClick={() =>
-                    navigate(`/projects/${project.id}`)
-                  }
-                >
-                  <h3>{project.name}</h3>
-                  <span className={`status ${project.status}`}>
-                    {project.status}
-                  </span>
-                  <p>{project.taskCount || 0} Tasks</p>
-                </div>
-              ))}
-            </div>
+            {projects.length === 0 ? (
+              <div className="empty-state">No projects yet</div>
+            ) : (
+              <div className="project-grid">
+                {projects.slice(0, 5).map((project) => (
+                  <div
+                    key={project.id}
+                    className="project-card"
+                    onClick={() =>
+                      navigate(`/projects/${project.id}`)
+                    }
+                  >
+                    <h3>{project.name}</h3>
+                    <span className={`status ${project.status}`}>
+                      {project.status}
+                    </span>
+                    <p>{project.taskCount || 0} Tasks</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </Section>
 
           {/* MY TASKS */}
@@ -122,38 +126,40 @@ export default function Dashboard() {
                 No tasks assigned to you
               </div>
             ) : (
-              <table className="task-table">
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Project</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Due</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {myTasks.map((task) => (
-                    <tr key={task.id}>
-                      <td>{task.title}</td>
-                      <td>{task.projectName}</td>
-                      <td className={`priority ${task.priority}`}>
-                        {task.priority}
-                      </td>
-                      <td>
-                        <span className={`badge ${task.status}`}>
-                          {task.status}
-                        </span>
-                      </td>
-                      <td>
-                        {task.dueDate
-                          ? new Date(task.dueDate).toLocaleDateString()
-                          : "—"}
-                      </td>
+              <div className="table-wrapper">
+                <table className="task-table">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Project</th>
+                      <th>Priority</th>
+                      <th>Status</th>
+                      <th>Due</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {myTasks.map((task) => (
+                      <tr key={task.id}>
+                        <td>{task.title}</td>
+                        <td>{task.projectName}</td>
+                        <td className={`priority ${task.priority}`}>
+                          {task.priority}
+                        </td>
+                        <td>
+                          <span className={`badge ${task.status}`}>
+                            {task.status}
+                          </span>
+                        </td>
+                        <td>
+                          {task.dueDate
+                            ? new Date(task.dueDate).toLocaleDateString()
+                            : "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </Section>
         </div>

@@ -1,7 +1,10 @@
+/* =========================
+   PAGE LAYOUT
+========================= */
 .tenants-page {
-  max-width: 1200px;      
-  margin: 0 auto;        
-  padding: 32px 24px;   
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
 }
 
 .page-title {
@@ -9,6 +12,7 @@
   font-weight: 600;
   margin-bottom: 32px;
 }
+
 .page-loading {
   padding: 40px;
   font-size: 18px;
@@ -19,18 +23,43 @@
   padding: 20px;
 }
 
+/* =========================
+   FILTER BAR (ADDON)
+========================= */
+.tenant-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.tenant-filters input,
+.tenant-filters select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  min-width: 180px;
+}
+
+/* =========================
+   GRID
+========================= */
 .tenants-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 32px;
-  justify-content: center; /* 🔑 Center grid items */
+  justify-content: center;
 }
 
-/* Card */
+/* =========================
+   CARD
+========================= */
 .tenant-card {
   background: #ffffff;
   border-radius: 16px;
   padding: 24px;
+  position: relative;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -40,7 +69,9 @@
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
 }
 
-/* Header */
+/* =========================
+   HEADER
+========================= */
 .tenant-header {
   display: flex;
   justify-content: space-between;
@@ -52,7 +83,9 @@
   font-size: 18px;
 }
 
-/* Status badge */
+/* =========================
+   STATUS BADGE
+========================= */
 .status {
   padding: 4px 10px;
   border-radius: 20px;
@@ -65,18 +98,23 @@
   color: #0f9d58;
 }
 
+.status.inactive,
 .status.suspended {
   background: #fdecea;
   color: #d93025;
 }
 
-/* Subdomain */
+/* =========================
+   SUBDOMAIN
+========================= */
 .subdomain {
   margin: 12px 0;
   color: #555;
 }
 
-/* Plan badge */
+/* =========================
+   PLAN BADGE
+========================= */
 .plan {
   display: inline-block;
   padding: 6px 12px;
@@ -100,7 +138,9 @@
   color: #0891b2;
 }
 
-/* Stats */
+/* =========================
+   STATS
+========================= */
 .stats {
   display: flex;
   justify-content: space-between;
@@ -116,4 +156,85 @@
 .stat-label {
   font-size: 12px;
   color: #666;
+}
+
+/* =========================
+   EDIT BUTTON (ADDON)
+========================= */
+.edit-btn {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 6px;
+
+  border: none;
+  background: #0f172a;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  background: #020617;
+}
+
+
+/* =========================
+   MODAL (ADDON)
+========================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 14px;
+  width: 320px;
+}
+
+.modal h3 {
+  margin-top: 0;
+}
+
+.modal label {
+  display: block;
+  margin-top: 14px;
+  font-weight: 500;
+}
+
+.modal select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-actions button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-actions .primary {
+  background: #0f172a;
+  color: white;
 }

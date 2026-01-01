@@ -3,9 +3,15 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
 import ProjectModal from "../components/ProjectModal";
+import { useAuth } from "../context/AuthContext";
 import "../styles/projects.css";
 
 export default function Projects() {
+  const { user } = useAuth();
+  const role = user?.role;
+
+  const isReadOnly = role === "super_admin" || role === "user";
+
   const [projects, setProjects] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState("");
@@ -13,6 +19,7 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editProject, setEditProject] = useState(null);
+
   const navigate = useNavigate();
 
   const loadProjects = async () => {
@@ -38,6 +45,7 @@ export default function Projects() {
   }, [search, projects]);
 
   const handleDelete = async (id) => {
+    if (isReadOnly) return;
     if (!window.confirm("Delete this project?")) return;
     await api.delete(`/projects/${id}`);
     loadProjects();
@@ -45,12 +53,23 @@ export default function Projects() {
 
   return (
     <>
+
       <div className="page-wrapper">
         <div className="page-header">
           <h1>Projects</h1>
-          <button className="primary-btn" onClick={() => setModalOpen(true)}>
-            + New Project
-          </button>
+
+          {/* CREATE BUTTON – tenant_admin only */}
+          {!isReadOnly && (
+            <button
+              className="primary-btn"
+              onClick={() => {
+                setEditProject(null);
+                setModalOpen(true);
+              }}
+            >
+              + New Project
+            </button>
+          )}
         </div>
 
         {/* FILTERS */}
@@ -88,32 +107,44 @@ export default function Projects() {
 
                 <div className="footer">
                   <small>Created by {p.createdBy?.fullName || "—"}</small>
-                  <small>{new Date(p.createdAt).toLocaleDateString()}</small>
+                  <small>
+                    {new Date(p.createdAt).toLocaleDateString()}
+                  </small>
                 </div>
 
+                {/* ACTIONS */}
                 <div className="actions">
                   <button onClick={() => navigate(`/projects/${p.id}`)}>
                     View
                   </button>
-                  <button
-                    onClick={() => {
-                      setEditProject(p);
-                      setModalOpen(true);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button className="danger" onClick={() => handleDelete(p.id)}>
-                    Delete
-                  </button>
+
+                  {!isReadOnly && (
+                    <>
+                      <button
+                        onClick={() => {
+                          setEditProject(p);
+                          setModalOpen(true);
+                        }}
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        className="danger"
+                        onClick={() => handleDelete(p.id)}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* MODAL */}
-        {modalOpen && (
+        {/* MODAL – tenant_admin only */}
+        {modalOpen && !isReadOnly && (
           <ProjectModal
             project={editProject}
             onClose={() => setModalOpen(false)}
