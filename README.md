@@ -67,7 +67,7 @@ docker-compose up -d
 
 ## Demo Video : 
 
-    https://drive.google.com/file/d/1k1GVZgcB4lPsFIcSv3UWt8duZsAN7P0A/view?usp=sharing
+    https://drive.google.com/file/d/1NAmMGV83_8jjIghB_ERCGBP0GP8DvpEa/view?usp=sharing
 
 ---
 
